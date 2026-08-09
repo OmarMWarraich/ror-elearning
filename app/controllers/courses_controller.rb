@@ -1,4 +1,5 @@
 class CoursesController < ApplicationController
+  before_action :authenticate_user!, except: %i[ index show search ]
   before_action :set_course, only: %i[ show edit update destroy ]
 
   # GET /courses or /courses.json
@@ -58,7 +59,7 @@ class CoursesController < ApplicationController
   end
 
   def search
-    @courses=Course.where("lower(name) LIKE ?", "%" + params[:q].downcase + "%")
+    @courses = Course.where("lower(title) LIKE ?", "%#{params[:q].to_s.downcase}%")
   end
 
   private
