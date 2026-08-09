@@ -4,6 +4,26 @@
   <%= render "users/shared/error_messages", resource: resource %>
 
   <div class="field">
+    <p><%= f.label :username %></p>
+    <p><%= f.text_field :username %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :first_name %></p>
+    <p><%= f.text_field :first_name %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :last_name %></p>
+    <p><%= f.text_field :last_name %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :bio %></p>
+    <p><%= f.text_area :bio %></p>
+  </div>
+
+  <div class="field">
     <p><%= f.label :email %></p>
     <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
   </div>
