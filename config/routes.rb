@@ -13,5 +13,13 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "courses#index"
+  unauthenticated do
+    devise_scope :user do
+      root to: "devise/sessions#new", as: :unauthenticated_root
+    end
+  end
+
+  authenticated :user do
+    root to: "courses#index"
+  end
 end
