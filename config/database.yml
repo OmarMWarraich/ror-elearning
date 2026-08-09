@@ -5,36 +5,46 @@
 #   gem "sqlite3"
 #
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: postgrespassword
+  host: localhost
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
   <<: *default
-  database: storage/development.sqlite3
+  database: <%= Rails.application.credentials.dig(:database, :name) || "elearning3_development" %>
+  username: <%= Rails.application.credentials.dig(:database, :username) || "postgres" %>
+  password: <%= Rails.application.credentials.dig(:database, :password) || "postgrespassword" %>
+  host: <%= Rails.application.credentials.dig(:database, :host) || "localhost" %>
+  port: <%= Rails.application.credentials.dig(:database, :port) || 5432 %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: storage/test.sqlite3
+  database: elearning3_test
 
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
   primary:
     <<: *default
-    database: storage/production.sqlite3
+    database: elearning3_production
+    username: elearning3
+    password: <%= ENV["ELEARNING3_DATABASE_PASSWORD"] %>
   cache:
     <<: *default
-    database: storage/production_cache.sqlite3
+    database: storage/production_cache.pgsql
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    database: storage/production_queue.sqlite3
+    database: storage/production_queue.pgsql
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    database: storage/production_cable.sqlite3
+    database: storage/production_cable.pgsql
     migrations_paths: db/cable_migrate
