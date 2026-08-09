@@ -31,10 +31,12 @@ A Rails 8 e-learning platform for creating and consuming online courses. Instruc
 - **Background jobs**: Solid Queue
 - **Caching**: Solid Cache
 - **Real-time**: Solid Cable
+- **Authentication**: [Devise](https://github.com/heartcombo/devise) 5 with database authenticatable, registerable, recoverable, rememberable, validatable, confirmable, lockable, trackable, and timeoutable
 - **Deployment**: Kamal-ready ([config/deploy.yml](config/deploy.yml)) and Dockerized ([Dockerfile](Dockerfile))
 
 ## Features
 
+- **Authentication**: email sign-in (or username) with Devise; sign up, sign in/out, password reset, email confirmation, account locking, and session timeout
 - **User roles**: students, instructors, and admins
 - **Categories**: organize courses into ordered categories
 - **Courses**: title, slug, rich-text description, status (draft / published / archived), price, duration, instructor, category
@@ -169,6 +171,7 @@ bin/rails db:drop db:create db:migrate db:seed
 ### Key migrations
 
 - `CreateUsers` — accounts with roles
+- `AddDeviseToUsers` — encrypted password, reset tokens, remember token, confirmation, tracking, lockable, and timeout columns
 - `CreateCategories` — course categories
 - `CreateCourses` — courses with slug, status, price, instructor, category
 - `CreateLessons` — ordered lessons with slug and status
@@ -288,6 +291,10 @@ Action Text's CSS is loaded via `stylesheet_link_tag :app, "actiontext"` in the 
 ### `_/a0ba12d2.js` routing errors
 
 This happens when the JSPM ESM build of Bootstrap is used. Switch to the jsDelivr bundle as described in [Bootstrap](#bootstrap).
+
+### Sign-in redirects for course management
+
+`CoursesController` protects create, update, edit, and destroy with `authenticate_user!`. Guests can still browse and search courses. Sign in as an instructor to manage courses.
 
 ### Enum argument errors (`wrong number of arguments`)
 
