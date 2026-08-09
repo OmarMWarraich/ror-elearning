@@ -1,7 +1,6 @@
 one:
   title: "Introduction to Ruby"
   slug: "introduction-to-ruby"
-  description: "Learn Ruby from scratch."
   status: 1
   instructor: one
   price_cents: 0
@@ -9,7 +8,6 @@ one:
 two:
   title: "Advanced Rails"
   slug: "advanced-rails"
-  description: "Deep dive into Rails."
   status: 0
   instructor: one
   price_cents: 9900

@@ -9,7 +9,8 @@ class Course < ApplicationRecord
 
   has_rich_text :description
 
-  validates :title, :description, :instructor, presence: true
+  validates :title, :instructor, presence: true
+  validates :description, presence: true, on: :create
   validates :title, :slug, uniqueness: true
   validates :price_cents, numericality: { greater_than_or_equal_to: 0 }
 
