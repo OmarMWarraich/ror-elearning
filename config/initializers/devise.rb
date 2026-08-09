@@ -151,7 +151,11 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  # config.confirm_within = 3.days
+  config.confirm_within = 3.days
+
+  # Allow unconfirmed access only in development/test so local sign-in works
+  # without a mailer. Production requires email confirmation before signing in.
+  config.allow_unconfirmed_access_for = Rails.env.production? ? 0.days : nil
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
