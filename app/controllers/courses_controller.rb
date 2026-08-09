@@ -57,6 +57,10 @@ class CoursesController < ApplicationController
     end
   end
 
+  def search
+    @courses=Course.where("lower(name) LIKE ?", "%" + params[:q].downcase + "%")
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_course
