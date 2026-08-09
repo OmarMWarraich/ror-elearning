@@ -3,7 +3,7 @@
 <% content_for :title, "Courses" %>
 
 <h1>Courses</h1>
-
+<%= render "layouts/shared/search" %>
 <div id="courses">
   <% @courses.each do |course| %>
     <%= render course %>
