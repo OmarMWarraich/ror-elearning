@@ -8,7 +8,7 @@ class User < ApplicationRecord
   validates :email, :username, presence: true, uniqueness: true
   validates :role, presence: true
 
-  enum role: { student: 0, instructor: 1, admin: 2 }
+  enum :role, { student: 0, instructor: 1, admin: 2 }
 
   def full_name
     "#{first_name} #{last_name}".strip

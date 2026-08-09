@@ -9,7 +9,7 @@ class Enrollment < ApplicationRecord
 
   before_validation :set_enrolled_at, on: :create
 
-  enum status: { active: 0, completed: 1, dropped: 2 }
+  enum :status, { active: 0, completed: 1, dropped: 2 }
 
   scope :active, -> { where(status: :active) }
   scope :completed, -> { where(status: :completed) }

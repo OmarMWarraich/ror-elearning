@@ -16,7 +16,7 @@ class Course < ApplicationRecord
   before_validation :generate_slug, on: :create
   before_validation :set_default_status, on: :create
 
-  enum status: { draft: 0, published: 1, archived: 2 }
+  enum :status, { draft: 0, published: 1, archived: 2 }
 
   scope :published, -> { where(status: :published) }
   scope :free, -> { where(price_cents: 0) }

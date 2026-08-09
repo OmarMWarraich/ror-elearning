@@ -11,7 +11,7 @@ class Lesson < ApplicationRecord
 
   before_validation :generate_slug, on: :create
 
-  enum status: { draft: 0, published: 1, archived: 2 }
+  enum :status, { draft: 0, published: 1, archived: 2 }
 
   scope :ordered, -> { order(:position) }
   scope :published, -> { where(status: :published) }
