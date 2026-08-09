@@ -69,6 +69,6 @@ class CoursesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def course_params
-      params.fetch(:course, {})
+      params.expect(course: [ :title, :description, :status, :instructor_id, :category_id, :price_cents, :duration_in_minutes, :published_at ])
     end
 end

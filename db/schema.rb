@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_09_160938) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_09_161139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,7 +66,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_09_160938) do
   create_table "courses", force: :cascade do |t|
     t.bigint "category_id"
     t.datetime "created_at", null: false
-    t.text "description", null: false
     t.integer "duration_in_minutes"
     t.bigint "instructor_id", null: false
     t.integer "price_cents", default: 0, null: false

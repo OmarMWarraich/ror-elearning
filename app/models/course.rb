@@ -3,7 +3,7 @@ class Course < ApplicationRecord
   belongs_to :category, optional: true
 
   has_many :lessons, -> { order(:position) }, dependent: :destroy
-  has_many :enrollments, dependent: :restrict_with_error
+  has_many :enrollments, dependent: :destroy
   has_many :students, through: :enrollments, source: :user
   has_many :reviews, dependent: :destroy
 
