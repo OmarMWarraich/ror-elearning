@@ -200,6 +200,14 @@ bin/rails test:system
 
 This app uses [Propshaft](https://github.com/rails/propshaft). Assets are served directly without a build step. Stylesheets live in [app/assets/stylesheets/](app/assets/stylesheets/) and JavaScript lives in [app/javascript/](app/javascript/).
 
+Stylesheets are linked directly from [app/views/layouts/application.html.erb](app/views/layouts/application.html.erb):
+
+```erb
+<%= stylesheet_link_tag :app, "actiontext", "data-turbo-track": "reload" %>
+```
+
+`:app` loads `application.css`; `"actiontext"` loads Action Text's Trix styles.
+
 Precompile assets for production or before running tests that render views:
 
 ```bash
@@ -275,7 +283,7 @@ PostgreSQL is required. The `pg` gem is listed in [Gemfile](Gemfile). Run `bundl
 
 ### `The asset 'actiontext.css' was not found`
 
-Run `bin/rails assets:precompile` (or for tests: `bin/rails assets:precompile RAILS_ENV=test`).
+Action Text's CSS is loaded via `stylesheet_link_tag :app, "actiontext"` in the layout. If Propshaft reports it missing after running `bin/rails action_text:install`, restart the Rails server so the new file is picked up from the asset load path.
 
 ### `_/a0ba12d2.js` routing errors
 
