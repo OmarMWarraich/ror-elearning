@@ -1,11 +1,15 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+  title: "Introduction to Ruby"
+  slug: "introduction-to-ruby"
+  description: "Learn Ruby from scratch."
+  status: 1
+  instructor: one
+  price_cents: 0
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+two:
+  title: "Advanced Rails"
+  slug: "advanced-rails"
+  description: "Deep dive into Rails."
+  status: 0
+  instructor: one
+  price_cents: 9900

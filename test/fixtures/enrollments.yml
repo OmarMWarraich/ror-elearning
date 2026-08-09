@@ -1,0 +1,5 @@
+one:
+  user: two
+  course: one
+  status: 0
+  progress_percentage: 0

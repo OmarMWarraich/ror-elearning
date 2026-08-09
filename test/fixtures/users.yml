@@ -1,0 +1,13 @@
+one:
+  email: "instructor@example.com"
+  username: "instructor"
+  first_name: "Jane"
+  last_name: "Doe"
+  role: 1
+
+two:
+  email: "student@example.com"
+  username: "student"
+  first_name: "John"
+  last_name: "Smith"
+  role: 0
