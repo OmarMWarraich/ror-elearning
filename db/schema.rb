@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_09_160420) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_09_160441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_09_160420) do
     t.index ["slug"], name: "index_lessons_on_slug", unique: true
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "comment"
+    t.bigint "course_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "rating", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["course_id"], name: "index_reviews_on_course_id"
+    t.index ["user_id", "course_id"], name: "index_reviews_on_user_id_and_course_id", unique: true
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
@@ -108,4 +120,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_09_160420) do
   add_foreign_key "lesson_completions", "lessons"
   add_foreign_key "lesson_completions", "users"
   add_foreign_key "lessons", "courses"
+  add_foreign_key "reviews", "courses"
+  add_foreign_key "reviews", "users"
 end
