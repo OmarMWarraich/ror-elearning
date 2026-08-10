@@ -1,0 +1,61 @@
+<% content_for :title, "Dashboard" %>
+
+<h1>Dashboard</h1>
+
+<% if current_user.student? || current_user.instructor? || current_user.admin? %>
+  <h2>My Enrollments</h2>
+  <% if @enrolled_courses.any? %>
+    <ul>
+      <% @enrolled_courses.each do |course| %>
+        <li><%= link_to course.title, course %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You are not enrolled in any courses yet.</p>
+  <% end %>
+<% end %>
+
+<% if current_user.instructor? || current_user.admin? %>
+  <h2>My Courses</h2>
+  <% if @instructed_courses.any? %>
+    <ul>
+      <% @instructed_courses.each do |course| %>
+        <li><%= link_to course.title, course %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You have not created any courses yet.</p>
+  <% end %>
+
+  <h2>Recent Enrollments</h2>
+  <% if @recent_enrollments&.any? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Student</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_enrollments.each do |enrollment| %>
+          <tr>
+            <td><%= enrollment.course.title %></td>
+            <td><%= enrollment.user.full_name.presence || enrollment.user.username %></td>
+            <td><%= enrollment.status.humanize %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No enrollments yet.</p>
+  <% end %>
+<% end %>
+
+<% if current_user.admin? %>
+  <h2>Administration</h2>
+  <ul>
+    <li><%= link_to "Manage categories", categories_path %></li>
+    <li><%= link_to "Manage courses", courses_path %></li>
+  </ul>
+<% end %>
