@@ -1,8 +1,18 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :courses
+  resources :categories
+  resources :courses do
+    resources :lessons, only: %i[index new create] do
+      resources :lesson_completions, only: %i[create]
+    end
+    resources :enrollments, only: %i[index create]
+    resources :reviews, only: %i[index create]
+  end
+  resources :lessons, only: %i[show edit update destroy]
+  resources :enrollments, only: %i[show destroy]
+  resources :reviews, only: %i[edit update destroy]
   get "/search", to: "courses#search"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get "/dashboard", to: "dashboard#index", as: :dashboard
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -20,6 +30,6 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    root to: "courses#index"
+    root to: "dashboard#index"
   end
 end
