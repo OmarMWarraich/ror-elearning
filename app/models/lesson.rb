@@ -10,9 +10,20 @@ class Lesson < ApplicationRecord
   validates :position, numericality: { greater_than_or_equal_to: 0 }
 
   before_validation :generate_slug, on: :create
+  before_validation :set_default_status, on: :create
 
   enum :status, { draft: 0, published: 1, archived: 2 }
 
   scope :ordered, -> { order(:position) }
   scope :published, -> { where(status: :published) }
+
+  private
+
+  def generate_slug
+    self.slug ||= title.to_s.parameterize
+  end
+
+  def set_default_status
+    self.status ||= :draft
+  end
 end

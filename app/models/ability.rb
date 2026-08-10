@@ -24,6 +24,7 @@ class Ability
     can :read, Lesson, course: { enrollments: { user_id: user.id } }
     can :create, Enrollment, user_id: user.id
     can :read, Enrollment, user_id: user.id
+    can :destroy, Enrollment, user_id: user.id
     can :create, LessonCompletion, user_id: user.id
     can :create, Review, user_id: user.id
     can :update, Review, user_id: user.id
