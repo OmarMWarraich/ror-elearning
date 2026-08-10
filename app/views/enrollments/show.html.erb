@@ -1,0 +1,20 @@
+<% content_for :title, "Enrollment" %>
+
+<h1>Enrollment</h1>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= @enrollment.course.title %></h5>
+    <p class="card-text">
+      <strong>Student:</strong> <%= @enrollment.user.full_name.presence || @enrollment.user.username %><br>
+      <strong>Status:</strong> <%= @enrollment.status.humanize %><br>
+      <strong>Progress:</strong> <%= @enrollment.progress_percentage %>%<br>
+      <strong>Enrolled:</strong> <%= l(@enrollment.enrolled_at, format: :short) if @enrollment.enrolled_at %>
+    </p>
+    <% if can? :destroy, @enrollment %>
+      <%= button_to "Drop enrollment", @enrollment, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "Back to course", @enrollment.course, class: "btn btn-secondary mt-3" %>

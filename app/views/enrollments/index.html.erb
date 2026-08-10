@@ -1,0 +1,28 @@
+<% content_for :title, "Enrollments - #{@course.title}" %>
+
+<h1>Enrollments for <%= @course.title %></h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Status</th>
+      <th>Progress</th>
+      <th>Enrolled at</th>
+      <th>Completed at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @enrollments.each do |enrollment| %>
+      <tr>
+        <td><%= enrollment.user.full_name.presence || enrollment.user.username %></td>
+        <td><%= enrollment.status.humanize %></td>
+        <td><%= enrollment.progress_percentage %>%</td>
+        <td><%= l(enrollment.enrolled_at, format: :short) if enrollment.enrolled_at %></td>
+        <td><%= l(enrollment.completed_at, format: :short) if enrollment.completed_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to course", @course, class: "btn btn-secondary" %>
