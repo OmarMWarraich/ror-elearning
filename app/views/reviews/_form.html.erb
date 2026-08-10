@@ -1,0 +1,26 @@
+<%= form_with(model: [review.course, review]) do |form| %>
+  <% if review.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(review.errors.count, "error") %> prohibited this review from being saved:</h4>
+      <ul>
+        <% review.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :rating, class: "form-label" %>
+    <%= form.select :rating, (1..5).to_a, {}, { class: "form-select" } %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :comment, class: "form-label" %>
+    <%= form.text_area :comment, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

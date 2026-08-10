@@ -1,0 +1,13 @@
+<div class="card mb-3" id="<%= dom_id review %>">
+  <div class="card-body">
+    <h5 class="card-title"><%= review.user.full_name.presence || review.user.username %></h5>
+    <h6 class="card-subtitle mb-2 text-muted"><%= review.rating %> / 5</h6>
+    <p class="card-text"><%= review.comment %></p>
+    <% if can? :update, review %>
+      <%= link_to "Edit", edit_review_path(review), class: "btn btn-sm btn-outline-primary" %>
+    <% end %>
+    <% if can? :destroy, review %>
+      <%= button_to "Destroy", review, method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
+    <% end %>
+  </div>
+</div>

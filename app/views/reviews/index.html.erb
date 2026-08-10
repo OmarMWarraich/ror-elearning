@@ -1,0 +1,11 @@
+<% content_for :title, "Reviews - #{@course.title}" %>
+
+<h1>Reviews for <%= @course.title %></h1>
+
+<div id="reviews">
+  <% @reviews.each do |review| %>
+    <%= render "review", review: review %>
+  <% end %>
+</div>
+
+<%= link_to "Back to course", @course, class: "btn btn-secondary" %>
