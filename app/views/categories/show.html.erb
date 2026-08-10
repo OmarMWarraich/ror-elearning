@@ -1,0 +1,17 @@
+<% content_for :title, @category.name %>
+
+<h1><%= @category.name %></h1>
+<p><%= @category.description %></p>
+
+<h2>Courses</h2>
+<div id="courses">
+  <% @courses.each do |course| %>
+    <%= render course %>
+    <p><%= link_to "Show this course", course %></p>
+  <% end %>
+</div>
+
+<% if can? :update, @category %>
+  <%= link_to "Edit this category", edit_category_path(@category) %> |
+<% end %>
+<%= link_to "Back to categories", categories_path %>
