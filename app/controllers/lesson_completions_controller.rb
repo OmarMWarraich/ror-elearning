@@ -9,9 +9,9 @@ class LessonCompletionsController < ApplicationController
     authorize! :create, @completion
 
     if @completion.save
-      redirect_to [@course, @lesson], notice: "Lesson marked as complete."
+      redirect_to [ @course, @lesson ], notice: "Lesson marked as complete."
     else
-      redirect_to [@course, @lesson], alert: @completion.errors.full_messages.to_sentence
+      redirect_to [ @course, @lesson ], alert: @completion.errors.full_messages.to_sentence
     end
   end
 

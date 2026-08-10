@@ -69,5 +69,5 @@ end
 
 gem "devise", "~> 5.0"
 
-# Role-based authorization
+ # Role-based authorization
  gem "cancancan"

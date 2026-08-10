@@ -21,7 +21,7 @@ class LessonsController < ApplicationController
     authorize! :create, @lesson
 
     if @lesson.save
-      redirect_to [@course, @lesson], notice: "Lesson was successfully created."
+      redirect_to [ @course, @lesson ], notice: "Lesson was successfully created."
     else
       render :new, status: :unprocessable_content
     end
@@ -35,7 +35,7 @@ class LessonsController < ApplicationController
     authorize! :update, @lesson
 
     if @lesson.update(lesson_params)
-      redirect_to [@course, @lesson], notice: "Lesson was successfully updated.", status: :see_other
+      redirect_to [ @course, @lesson ], notice: "Lesson was successfully updated.", status: :see_other
     else
       render :edit, status: :unprocessable_content
     end
