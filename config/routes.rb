@@ -2,13 +2,12 @@ Rails.application.routes.draw do
   devise_for :users
   resources :categories
   resources :courses do
-    resources :lessons, only: %i[index new create] do
+    resources :lessons do
       resources :lesson_completions, only: %i[create]
     end
     resources :enrollments, only: %i[index create]
     resources :reviews, only: %i[index create]
   end
-  resources :lessons, only: %i[show edit update destroy]
   resources :enrollments, only: %i[show destroy]
   resources :reviews, only: %i[edit update destroy]
   get "/search", to: "courses#search"

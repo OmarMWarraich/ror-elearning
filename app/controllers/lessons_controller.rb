@@ -1,6 +1,6 @@
 class LessonsController < ApplicationController
-  before_action :authenticate_user!, except: %i[show]
-  before_action :set_course, only: %i[index new create]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :set_course
   before_action :set_lesson, only: %i[show edit update destroy]
 
   def index
@@ -9,7 +9,6 @@ class LessonsController < ApplicationController
 
   def show
     authorize! :read, @lesson
-    @course = @lesson.course
   end
 
   def new
@@ -36,7 +35,7 @@ class LessonsController < ApplicationController
     authorize! :update, @lesson
 
     if @lesson.update(lesson_params)
-      redirect_to [@lesson.course, @lesson], notice: "Lesson was successfully updated.", status: :see_other
+      redirect_to [@course, @lesson], notice: "Lesson was successfully updated.", status: :see_other
     else
       render :edit, status: :unprocessable_content
     end
@@ -45,7 +44,7 @@ class LessonsController < ApplicationController
   def destroy
     authorize! :destroy, @lesson
     @lesson.destroy!
-    redirect_to course_lessons_path(@lesson.course), notice: "Lesson was successfully destroyed.", status: :see_other
+    redirect_to course_lessons_path(@course), notice: "Lesson was successfully destroyed.", status: :see_other
   end
 
   private
@@ -55,7 +54,7 @@ class LessonsController < ApplicationController
   end
 
   def set_lesson
-    @lesson = Lesson.find(params.expect(:id))
+    @lesson = @course.lessons.find(params.expect(:id))
   end
 
   def lesson_params

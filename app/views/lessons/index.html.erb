@@ -6,7 +6,7 @@
   <% @lessons.each do |lesson| %>
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title"><%= link_to lesson.title, [lesson.course, lesson] %></h5>
+        <h5 class="card-title"><%= link_to lesson.title, [@course, lesson] %></h5>
         <p class="card-text"><%= lesson.status.humanize %></p>
         <% if can? :update, lesson %>
           <%= link_to "Edit", edit_lesson_path(lesson), class: "btn btn-sm btn-outline-primary" %>
