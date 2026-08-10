@@ -1,6 +1,6 @@
 # Ror Elearning
 
-A Rails 8 e-learning platform for creating and consuming online courses. Instructors can publish courses with lessons, students can enroll and track progress, and everyone can leave reviews.
+A Rails 8 e-learning platform for creating and consuming online courses. Students can browse and enroll in courses, instructors can publish courses with lessons, and admins manage everything. Authentication, authorization, progress tracking, reviews, and rich-text content are all built in.
 
 ## Table of contents
 
@@ -11,11 +11,8 @@ A Rails 8 e-learning platform for creating and consuming online courses. Instruc
 - [Configuration](#configuration)
 - [Database](#database)
 - [Running tests](#running-tests)
-- [Asset pipeline](#asset-pipeline)
-- [Bootstrap](#bootstrap)
-- [Importmap](#importmap)
 - [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
+- [Authorization](#authorization)
 - [License](#license)
 
 ## Tech stack
@@ -32,21 +29,73 @@ A Rails 8 e-learning platform for creating and consuming online courses. Instruc
 - **Caching**: Solid Cache
 - **Real-time**: Solid Cable
 - **Authentication**: [Devise](https://github.com/heartcombo/devise) 5 with database authenticatable, registerable, recoverable, rememberable, validatable, confirmable, lockable, trackable, and timeoutable
+- **Authorization**: [CanCanCan](https://github.com/CanCanCommunity/cancancan)
 - **Deployment**: Kamal-ready ([config/deploy.yml](config/deploy.yml)) and Dockerized ([Dockerfile](Dockerfile))
 
 ## Features
 
-- **Authentication**: email sign-in (or username) with Devise; sign up, sign in/out, password reset, email confirmation, account locking, and session timeout
-- **User roles**: students, instructors, and admins
-- **Categories**: organize courses into ordered categories
-- **Courses**: title, slug, rich-text description, status (draft / published / archived), price, duration, instructor, category
-- **Lessons**: ordered lessons within a course with rich-text content and status
-- **Enrollments**: students can enroll in courses; progress is tracked automatically
-- **Lesson completions**: completing a lesson updates enrollment progress
-- **Reviews**: students can rate and review courses once enrolled
-- **Search**: full-text-ish course search by title
-- **Friendly URLs**: slugs for courses, categories, and lessons
-- **Bootstrap UI**: responsive styling and components out of the box
+### Authentication & accounts
+
+- Sign up, sign in, and sign out via Devise
+- Log in with **email or username**
+- Password reset, email confirmation, account locking, and session timeout
+- User profile fields: email, username, first name, last name, bio
+
+### Roles
+
+Three built-in roles powered by a `role` enum on `User`:
+
+- **Guest** — not signed in
+- **Student** — signed-up user; can enroll, complete lessons, and review courses
+- **Instructor** — can create and manage their own courses and lessons, and view enrollments on their courses
+- **Admin** — full access to manage all content
+
+### Categories
+
+- Ordered, slugged categories for grouping courses
+- Publicly browsable; only instructors and admins can create or edit them
+
+### Courses
+
+- Rich-text descriptions via Action Text
+- Metadata: title, slug, status (`draft`, `published`, `archived`), price, duration, instructor, optional category
+- Draft and archived courses are hidden from guests and students until published
+- Search courses by title
+- Average rating computed from reviews
+
+### Lessons
+
+- Ordered lessons within a course
+- Rich-text lesson content
+- Status lifecycle (`draft`, `published`, `archived`)
+- Guests can only see lessons in published courses; enrolled students can access lessons in their courses
+
+### Enrollments
+
+- Students enroll in courses and pay the listed price (recorded as `price_paid_cents`)
+- Enrollment status tracking: `active`, `completed`, or `dropped`
+- Progress percentage updates automatically as lessons are completed
+- Instructors can view enrollments for their own courses
+
+### Lesson completions
+
+- Students mark lessons complete
+- Completions are scoped to the user's active enrollment
+- Enrollment progress is recalculated after each completion
+
+### Reviews
+
+- Enrolled students can rate (1–5) and review courses
+- Students can edit or delete their own reviews
+- Reviews are visible to everyone
+
+### Friendly URLs
+
+- Courses, categories, and lessons use URL-safe slugs generated from their titles
+
+### Responsive UI
+
+- Bootstrap 5 styling throughout, with a custom color palette and form controls
 
 ## Domain overview
 
@@ -107,9 +156,6 @@ cd ror-elearning
 
 # Install Ruby dependencies
 bundle install
-
-# Install JavaScript dependencies (none via npm; importmap vendors them)
-# Bootstrap and Popper are already vendored in vendor/javascript
 
 # Create and migrate the database
 bin/rails db:create db:migrate
@@ -183,11 +229,8 @@ bin/rails db:drop db:create db:migrate db:seed
 ## Running tests
 
 ```bash
-# Create the test database
-bin/rails db:create RAILS_ENV=test
-
-# Migrate the test database
-bin/rails db:migrate RAILS_ENV=test
+# Create and migrate the test database
+bin/rails db:create db:migrate RAILS_ENV=test
 
 # Run all tests
 bin/rails test
@@ -199,71 +242,6 @@ System tests (browser-driven) can be run with:
 bin/rails test:system
 ```
 
-## Asset pipeline
-
-This app uses [Propshaft](https://github.com/rails/propshaft). Assets are served directly without a build step. Stylesheets live in [app/assets/stylesheets/](app/assets/stylesheets/) and JavaScript lives in [app/javascript/](app/javascript/).
-
-Stylesheets are linked directly from [app/views/layouts/application.html.erb](app/views/layouts/application.html.erb):
-
-```erb
-<%= stylesheet_link_tag :app, "actiontext", "data-turbo-track": "reload" %>
-```
-
-`:app` loads `application.css`; `"actiontext"` loads Action Text's Trix styles.
-
-Precompile assets for production or before running tests that render views:
-
-```bash
-bin/rails assets:precompile
-```
-
-Clean precompiled assets in development:
-
-```bash
-bin/rails assets:clobber
-```
-
-## Bootstrap
-
-Bootstrap 5.3.8 is vendored locally in [vendor/javascript/](vendor/javascript/):
-
-- `vendor/javascript/bootstrap.js` — Bootstrap bundle with Popper included
-- `vendor/javascript/bootstrap.css` — Bootstrap CSS
-
-It is imported in [app/javascript/application.js](app/javascript/application.js) and included via `@import url("bootstrap.css")` in [app/assets/stylesheets/application.css](app/assets/stylesheets/application.css).
-
-Bootstrap tooltips and popovers are initialized globally on `turbo:load`.
-
-### Updating Bootstrap
-
-```bash
-# Download latest files and remove source map comments
-curl -L -o vendor/javascript/bootstrap.js https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js
-curl -L -o vendor/javascript/bootstrap.css https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css
-```
-
-Then remove the trailing `sourceMappingURL` comments to avoid Rails missing-asset warnings.
-
-## Importmap
-
-JavaScript dependencies are managed by [importmap-rails](https://github.com/rails/importmap-rails). The map is defined in [config/importmap.rb](config/importmap.rb).
-
-Pin a new package:
-
-```bash
-./bin/importmap pin <package-name>
-```
-
-Check for outdated packages:
-
-```bash
-./bin/importmap outdated
-```
-
-### Why not use JSPM for Bootstrap?
-
-The JSPM ESM build of Bootstrap imports shared helper chunks such as `../_/a0ba12d2.js`. `importmap-rails` only vendors the main entry point, causing 404 errors for those chunks. Using the self-contained `bootstrap.bundle.min.js` from jsDelivr avoids the problem entirely.
-
 ## Deployment
 
 The app is configured for deployment with [Kamal](https://kamal-deploy.org/):
@@ -274,34 +252,53 @@ kamal setup
 
 See [config/deploy.yml](config/deploy.yml) for server, registry, and accessory configuration. The repository also includes a [Dockerfile](Dockerfile) for container-based deployment.
 
-## Troubleshooting
+## Authorization
 
-### `ActiveRecord::ConnectionNotEstablished: invalid integer value ...`
+Authorization is handled by [CanCanCan](https://github.com/CanCanCommunity/cancancan) via [app/models/ability.rb](app/models/ability.rb). Access checks use `authorize!` in controllers and `can?`/`cannot?` in views.
 
-Caused by YAML values like `port: Rails.application.credentials.dig(:database, :port)` without ERB tags. Wrap them in `<%= %>`.
+Access-denied exceptions are rescued in [app/controllers/application_controller.rb](app/controllers/application_controller.rb) and redirect guests and unauthorized users to the root path with an alert message.
 
-### `LoadError: pg is not part of the bundle`
+### Permission matrix
 
-PostgreSQL is required. The `pg` gem is listed in [Gemfile](Gemfile). Run `bundle install` if it is missing.
+| Resource | Guest | Student | Instructor | Admin |
+| --- | --- | --- | --- | --- |
+| Courses (read published) | ✅ | ✅ | ✅ | ✅ |
+| Courses (search) | ✅ | ✅ | ✅ | ✅ |
+| Courses (create / manage) | ❌ | ❌ | own only | ✅ |
+| Categories | read only | read only | read only | full |
+| Lessons in published courses | ✅ | ✅ | ✅ | ✅ |
+| Lessons in own courses | — | — | ✅ | ✅ |
+| Enrollments | — | own only | read own course enrollments | full |
+| Lesson completions | — | own only | — | full |
+| Reviews | read only | own only | read only | full |
 
-### `The asset 'actiontext.css' was not found`
+### Key abilities
 
-Action Text's CSS is loaded via `stylesheet_link_tag :app, "actiontext"` in the layout. If Propshaft reports it missing after running `bin/rails action_text:install`, restart the Rails server so the new file is picked up from the asset load path.
+- **Guests** can browse published courses, categories, and lessons, search courses, and read reviews.
+- **Students** can enroll in courses, drop their enrollments, complete lessons, and create/edit/destroy their own reviews.
+- **Instructors** inherit student abilities and can create, update, and destroy their own courses and the lessons within them. They can also view enrollments and completions for their own courses.
+- **Admins** can manage everything.
 
-### `_/a0ba12d2.js` routing errors
+### Checking abilities
 
-This happens when the JSPM ESM build of Bootstrap is used. Switch to the jsDelivr bundle as described in [Bootstrap](#bootstrap).
-
-### Sign-in redirects for course management
-
-`CoursesController` protects create, update, edit, and destroy with `authenticate_user!`. Guests can still browse and search courses. Sign in as an instructor to manage courses.
-
-### Enum argument errors (`wrong number of arguments`)
-
-Rails 8.1 requires the positional enum syntax:
+In controllers:
 
 ```ruby
-enum :status, { draft: 0, published: 1, archived: 2 }
+authorize! :update, @course
+```
+
+In views:
+
+```erb
+<% if can? :create, Course %>
+  <%= link_to "New course", new_course_path %>
+<% end %>
+```
+
+Load and authorize collections:
+
+```ruby
+@courses = Course.accessible_by(current_ability)
 ```
 
 ## License
