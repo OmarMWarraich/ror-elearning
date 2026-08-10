@@ -2,7 +2,8 @@ require "test_helper"
 
 class ReviewsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @course = courses(:one)
+    @course = courses(:two)
+    @course.update!(status: :published)
     @student = users(:two)
     @review = reviews(:one)
   end

@@ -34,14 +34,14 @@ class LessonsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update lesson when instructor" do
     sign_in @instructor
-    patch lesson_url(@lesson), params: { lesson: { title: "Updated Lesson" } }
+    patch course_lesson_url(@course, @lesson), params: { lesson: { title: "Updated Lesson" } }
     assert_redirected_to course_lesson_url(@course, @lesson)
   end
 
   test "should destroy lesson when instructor" do
     sign_in @instructor
     assert_difference("Lesson.count", -1) do
-      delete lesson_url(@lesson)
+      delete course_lesson_url(@course, @lesson)
     end
     assert_redirected_to course_lessons_url(@course)
   end

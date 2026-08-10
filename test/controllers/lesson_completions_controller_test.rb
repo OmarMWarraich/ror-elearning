@@ -2,8 +2,10 @@ require "test_helper"
 
 class LessonCompletionsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @course = courses(:one)
+    @course = courses(:two)
+    @course.update!(status: :published)
     @lesson = lessons(:one)
+    @lesson.update!(course: @course)
     @student = users(:two)
   end
 
