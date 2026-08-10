@@ -1,0 +1,41 @@
+<%= form_with(model: [lesson.course, lesson]) do |form| %>
+  <% if lesson.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(lesson.errors.count, "error") %> prohibited this lesson from being saved:</h4>
+      <ul>
+        <% lesson.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :content, class: "form-label" %>
+    <%= form.rich_text_area :content, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :position, class: "form-label" %>
+    <%= form.number_field :position, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :duration_in_minutes, class: "form-label" %>
+    <%= form.number_field :duration_in_minutes, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: "form-label" %>
+    <%= form.select :status, Lesson.statuses.keys.map { |s| [s.humanize, s] }, {}, { class: "form-select" } %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

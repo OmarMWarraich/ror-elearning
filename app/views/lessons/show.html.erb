@@ -1,0 +1,19 @@
+<% content_for :title, @lesson.title %>
+
+<h1><%= @lesson.title %></h1>
+<p class="text-muted"><%= @course.title %> &middot; <%= @lesson.status.humanize %></p>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <%= @lesson.content %>
+  </div>
+</div>
+
+<% if user_signed_in? && current_enrollment&.active? && can?(:create, LessonCompletion.new(user: current_user, lesson: @lesson, enrollment: current_enrollment)) %>
+  <%= button_to "Mark as complete", course_lesson_lesson_completions_path(@course, @lesson), class: "btn btn-success" %>
+<% end %>
+
+<% if can? :update, @lesson %>
+  <%= link_to "Edit this lesson", edit_lesson_path(@lesson) %> |
+<% end %>
+<%= link_to "Back to lessons", course_lessons_path(@course) %>
