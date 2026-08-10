@@ -64,7 +64,18 @@ jobs:
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
-
+  
+  services:
+    postgres:
+      image: postgres:16
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgrespassword
+        POSTGRES_DB: elearning3_test
+      ports:
+        - 5432:5432
+      options: --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
+  
   test:
     runs-on: ubuntu-latest
 
