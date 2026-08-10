@@ -17,7 +17,7 @@ A Rails 8 e-learning platform for creating and consuming online courses. Student
 
 ## Tech stack
 
-- **Ruby**: 4.0.5 (see [.ruby-version](.ruby-version))
+- **Ruby**: 4.0.6 (see [.ruby-version](.ruby-version))
 - **Rails**: 8.1.3.1
 - **Database**: PostgreSQL 14+
 - **Asset pipeline**: [Propshaft](https://github.com/rails/propshaft)
