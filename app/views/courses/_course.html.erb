@@ -1,2 +1,7 @@
-<div id="<%= dom_id course %>">
+<div class="card mb-3" id="<%= dom_id course %>">
+  <div class="card-body">
+    <h5 class="card-title"><%= course.title %></h5>
+    <h6 class="card-subtitle mb-2 text-muted"><%= course.category&.name || "Uncategorized" %></h6>
+    <p class="card-text"><%= course.status.humanize %> &middot; <%= course.price_cents.zero? ? "Free" : number_to_currency(course.price_cents / 100.0) %></p>
+  </div>
 </div>

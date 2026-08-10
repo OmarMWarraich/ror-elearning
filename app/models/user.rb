@@ -29,4 +29,8 @@ class User < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}".strip
   end
+
+  def instructor_of?(course)
+    course.instructor_id == id
+  end
 end

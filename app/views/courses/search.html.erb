@@ -1,0 +1,16 @@
+<% content_for :title, "Search results" %>
+
+<h1>Search results for "<%= params[:q] %>"</h1>
+
+<div id="courses">
+  <% if @courses.any? %>
+    <% @courses.each do |course| %>
+      <%= render course %>
+      <p><%= link_to "Show this course", course %></p>
+    <% end %>
+  <% else %>
+    <p>No courses found.</p>
+  <% end %>
+</div>
+
+<%= link_to "Back to courses", courses_path, class: "btn btn-secondary" %>
