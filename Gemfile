@@ -68,3 +68,6 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+
+# Role-based authorization
+ gem "cancancan"
