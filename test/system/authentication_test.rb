@@ -11,6 +11,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     fill_in "Password", with: "password"
     click_on "Log in"
     assert_text "Signed in successfully."
+    assert_current_path dashboard_path
   end
 
   test "signing in with username and password" do
