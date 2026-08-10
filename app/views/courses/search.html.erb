@@ -1,15 +1,24 @@
 <% content_for :title, "Search results" %>
 
-<h1>Search results for "<%= params[:q] %>"</h1>
+<div class="page-header">
+  <h1>Search results</h1>
+  <% if params[:q].present? %>
+    <p class="lead">Found <%= pluralize(@courses.count, "course") %> for "<%= params[:q] %>"</p>
+  <% end %>
+</div>
 
-<div id="courses">
+<div id="courses" class="row">
   <% if @courses.any? %>
     <% @courses.each do |course| %>
-      <%= render course %>
-      <p><%= link_to "Show this course", course %></p>
+      <div class="col-md-6 col-lg-4">
+        <%= render course %>
+        <p class="mb-4"><%= link_to "Show this course", course, class: "btn btn-outline-primary btn-sm" %></p>
+      </div>
     <% end %>
   <% else %>
-    <p>No courses found.</p>
+    <div class="empty-state">
+      <p>No courses found.</p>
+    </div>
   <% end %>
 </div>
 

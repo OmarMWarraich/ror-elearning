@@ -1,15 +1,20 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Courses" %>
 
-<h1>Courses</h1>
+<div class="page-header">
+  <h1>Courses</h1>
+  <p class="lead">Browse our collection of courses and start learning today.</p>
+</div>
 
-<div id="courses">
+<% if notice %>
+  <p style="color: green"><%= notice %></p>
+<% end %>
+
+<div id="courses" class="row">
   <% @courses.each do |course| %>
-    <%= render course %>
-    <p>
-      <%= link_to "Show this course", course %>
-    </p>
+    <div class="col-md-6 col-lg-4">
+      <%= render course %>
+      <p class="mb-4"><%= link_to "Show this course", course, class: "btn btn-outline-primary btn-sm" %></p>
+    </div>
   <% end %>
 </div>
 

@@ -1,61 +1,90 @@
 <% content_for :title, "Dashboard" %>
 
-<h1>Dashboard</h1>
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p class="lead">Welcome back, <%= current_user.full_name.presence || current_user.username %>.</p>
+</div>
 
-<% if current_user.student? || current_user.instructor? || current_user.admin? %>
-  <h2>My Enrollments</h2>
-  <% if @enrolled_courses.any? %>
-    <ul>
-      <% @enrolled_courses.each do |course| %>
-        <li><%= link_to course.title, course %></li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p>You are not enrolled in any courses yet.</p>
-  <% end %>
-<% end %>
-
-<% if current_user.instructor? || current_user.admin? %>
-  <h2>My Courses</h2>
-  <% if @instructed_courses.any? %>
-    <ul>
-      <% @instructed_courses.each do |course| %>
-        <li><%= link_to course.title, course %></li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p>You have not created any courses yet.</p>
-  <% end %>
-
-  <h2>Recent Enrollments</h2>
-  <% if @recent_enrollments&.any? %>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th>Student</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @recent_enrollments.each do |enrollment| %>
-          <tr>
-            <td><%= enrollment.course.title %></td>
-            <td><%= enrollment.user.full_name.presence || enrollment.user.username %></td>
-            <td><%= enrollment.status.humanize %></td>
-          </tr>
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h2 class="h5">My Enrollments</h2>
+        <% if @enrolled_courses.any? %>
+          <ul class="list-group list-group-flush">
+            <% @enrolled_courses.each do |course| %>
+              <li class="list-group-item ps-0"><%= link_to course.title, course %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">You are not enrolled in any courses yet.</p>
         <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p>No enrollments yet.</p>
-  <% end %>
-<% end %>
+      </div>
+    </div>
+  </div>
 
-<% if current_user.admin? %>
-  <h2>Administration</h2>
-  <ul>
-    <li><%= link_to "Manage categories", categories_path %></li>
-    <li><%= link_to "Manage courses", courses_path %></li>
-  </ul>
-<% end %>
+  <% if current_user.instructor? || current_user.admin? %>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h2 class="h5">My Courses</h2>
+          <% if @instructed_courses.any? %>
+            <ul class="list-group list-group-flush">
+              <% @instructed_courses.each do |course| %>
+                <li class="list-group-item ps-0"><%= link_to course.title, course %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted mb-0">You have not created any courses yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h5">Recent Enrollments</h2>
+          <% if @recent_enrollments&.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Course</th>
+                    <th>Student</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @recent_enrollments.each do |enrollment| %>
+                    <tr>
+                      <td><%= enrollment.course.title %></td>
+                      <td><%= enrollment.user.full_name.presence || enrollment.user.username %></td>
+                      <td><%= enrollment.status.humanize %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No enrollments yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if current_user.admin? %>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h5">Administration</h2>
+          <div class="d-flex gap-2">
+            <%= link_to "Manage categories", categories_path, class: "btn btn-outline-primary" %>
+            <%= link_to "Manage courses", courses_path, class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
