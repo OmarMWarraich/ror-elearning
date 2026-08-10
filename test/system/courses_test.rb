@@ -32,6 +32,7 @@ class CoursesTest < ApplicationSystemTestCase
     visit new_course_url
     assert_selector "h1", text: "New course"
     fill_in "Title", with: "System Test Course"
+    find(:css, "#course_description", visible: false).set("A course created by system tests.")
     fill_in "Price (cents)", with: "1000"
     fill_in "Duration in minutes", with: "60"
     select "Published", from: "Status"

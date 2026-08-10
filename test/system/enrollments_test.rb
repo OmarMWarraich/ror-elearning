@@ -2,7 +2,8 @@ require "application_system_test_case"
 
 class EnrollmentsTest < ApplicationSystemTestCase
   setup do
-    @course = courses(:one)
+    @course = courses(:two)
+    @course.update!(status: :published)
     @student = users(:two)
   end
 
