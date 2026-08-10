@@ -1,10 +1,61 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @course %>
+<% content_for :title, @course.title %>
 
-<div>
-  <%= link_to "Edit this course", edit_course_path(@course) %> |
+<h1><%= @course.title %></h1>
+<p class="text-muted">
+  <%= @course.status.humanize %> &middot;
+  <%= @course.category&.name || "Uncategorized" %> &middot;
+  <%= @course.price_cents.zero? ? "Free" : number_to_currency(@course.price_cents / 100.0) %>
+</p>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <%= @course.description %>
+  </div>
+</div>
+
+<% if user_signed_in? && @course.instructor != current_user && !@course.enrolled?(current_user) && can?(:create, Enrollment.new(user: current_user, course: @course)) %>
+  <%= button_to "Enroll now", course_enrollments_path(@course), class: "btn btn-success mb-3" %>
+<% elsif user_signed_in? && @course.enrolled?(current_user) %>
+  <div class="alert alert-info">You are enrolled in this course.</div>
+<% end %>
+
+<h2>Lessons</h2>
+<% if @lessons.any? %>
+  <ul>
+    <% @lessons.each do |lesson| %>
+      <li><%= link_to lesson.title, [@course, lesson] %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No lessons available yet.</p>
+<% end %>
+
+<% if can? :create, Lesson.new(course: @course) %>
+  <%= link_to "Add lesson", new_course_lesson_path(@course), class: "btn btn-primary btn-sm" %>
+<% end %>
+
+<h2 class="mt-4">Reviews</h2>
+<% if @reviews.any? %>
+  <%= render @reviews %>
+<% else %>
+  <p>No reviews yet.</p>
+<% end %>
+<%= link_to "All reviews", course_reviews_path(@course), class: "btn btn-link" %>
+
+<% if @review %>
+  <h3>Write a review</h3>
+  <%= render "reviews/form", review: @review %>
+<% end %>
+
+<div class="mt-4">
+  <% if can? :update, @course %>
+    <%= link_to "Edit this course", edit_course_path(@course) %> |
+  <% end %>
   <%= link_to "Back to courses", courses_path %>
 
-  <%= button_to "Destroy this course", @course, method: :delete %>
+  <% if can? :destroy, @course %>
+    <%= button_to "Destroy this course", @course, method: :delete, class: "btn btn-danger mt-2", data: { turbo_confirm: "Are you sure?" } %>
+  <% end %>
 </div>
