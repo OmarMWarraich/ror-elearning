@@ -205,3 +205,14 @@ main {
   min-height: calc(100vh - 4rem);
   padding-bottom: 3rem;
 }
+
+/* Auth helper links */
+.auth-links a {
+  color: #64748b;
+  transition: color 0.15s ease;
+}
+
+.auth-links a:hover {
+  color: var(--bs-primary);
+  text-decoration: underline !important;
+}
